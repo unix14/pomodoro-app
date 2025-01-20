@@ -31,9 +31,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
         type="button"
         variant="ghost"
         onClick={() => navigate("/")}
-        className="absolute top-4 left-4"
+        className="absolute top-4 left-4 flex items-center space-x-2"
       >
         <ArrowLeft className="h-4 w-4" />
+        <span>Back</span>
       </Button>
       <div className="space-y-4">
         <div className="space-y-2">

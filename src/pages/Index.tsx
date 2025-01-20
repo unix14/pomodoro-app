@@ -1,24 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Timer from "@/components/Timer";
 import { useToast } from "@/components/ui/use-toast";
-import { Timer as TimerIcon, Settings as SettingsIcon } from "lucide-react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { Timer as TimerIcon } from "lucide-react";
 
 const Index = () => {
-  const [workDuration, setWorkDuration] = useState(25);
-  const [breakDuration, setBreakDuration] = useState(5);
-  const [timeLeft, setTimeLeft] = useState(workDuration * 60);
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkMode, setIsWorkMode] = useState(true);
   const { toast } = useToast();
-
-  useEffect(() => {
-    // Reset timer when durations change
-    if (!isRunning) {
-      setTimeLeft(isWorkMode ? workDuration * 60 : breakDuration * 60);
-    }
-  }, [workDuration, breakDuration, isWorkMode, isRunning]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -31,7 +20,7 @@ const Index = () => {
       const audio = new Audio("/bell.mp3");
       audio.play();
       setIsWorkMode(!isWorkMode);
-      setTimeLeft(isWorkMode ? breakDuration * 60 : workDuration * 60);
+      setTimeLeft(isWorkMode ? 5 * 60 : 25 * 60);
       toast({
         title: isWorkMode ? "Break Time!" : "Back to Work!",
         description: isWorkMode
@@ -41,22 +30,18 @@ const Index = () => {
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, isWorkMode, workDuration, breakDuration, toast]);
+  }, [isRunning, timeLeft, isWorkMode, toast]);
 
   const handleStart = () => setIsRunning(true);
   const handlePause = () => setIsRunning(false);
   const handleReset = () => {
     setIsRunning(false);
-    setTimeLeft(workDuration * 60);
+    setTimeLeft(25 * 60);
     setIsWorkMode(true);
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+    <div
       className={`min-h-screen flex flex-col transition-colors duration-700 ${
         isRunning
           ? isWorkMode
@@ -71,12 +56,6 @@ const Index = () => {
             <TimerIcon className="h-6 w-6" />
             <h1 className="text-xl font-semibold">Pomodoro Timer</h1>
           </div>
-          <Link
-            to="/settings"
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <SettingsIcon className="h-5 w-5" />
-          </Link>
         </div>
       </div>
       <div className="flex-1 flex items-center justify-center p-8">
@@ -100,7 +79,7 @@ const Index = () => {
           Eyal Yaakobi
         </a>
       </footer>
-    </motion.div>
+    </div>
   );
 };
 

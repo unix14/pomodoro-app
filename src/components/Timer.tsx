@@ -1,7 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, RefreshCw, Settings } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Play, Pause, RefreshCw } from "lucide-react";
 
 interface TimerProps {
   minutes: number;
@@ -22,8 +21,6 @@ const Timer: React.FC<TimerProps> = ({
   onPause,
   onReset,
 }) => {
-  const navigate = useNavigate();
-
   return (
     <div className="flex flex-col items-center space-y-8">
       <div className="text-6xl font-bold animate-timer-pulse">
@@ -48,14 +45,6 @@ const Timer: React.FC<TimerProps> = ({
           className="h-12 w-12"
         >
           <RefreshCw className="h-6 w-6" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => navigate("/settings")}
-          className="h-12 w-12"
-        >
-          <Settings className="h-6 w-6" />
         </Button>
       </div>
     </div>
