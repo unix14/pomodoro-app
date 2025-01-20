@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Timer from "@/components/Timer";
 import { useToast } from "@/components/ui/use-toast";
-import { Timer as TimerIcon } from "lucide-react";
+import { Timer as TimerIcon, Settings as SettingsIcon } from "lucide-react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Index = () => {
   const [workDuration, setWorkDuration] = useState(25);
@@ -50,7 +52,11 @@ const Index = () => {
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
       className={`min-h-screen flex flex-col transition-colors duration-700 ${
         isRunning
           ? isWorkMode
@@ -65,14 +71,12 @@ const Index = () => {
             <TimerIcon className="h-6 w-6" />
             <h1 className="text-xl font-semibold">Pomodoro Timer</h1>
           </div>
-          <a
-            href="https://github.com/unix14"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          <Link
+            to="/settings"
+            className="text-gray-600 hover:text-gray-900 transition-colors"
           >
-            Eyal Yaakobi
-          </a>
+            <SettingsIcon className="h-5 w-5" />
+          </Link>
         </div>
       </div>
       <div className="flex-1 flex items-center justify-center p-8">
@@ -86,7 +90,17 @@ const Index = () => {
           onReset={handleReset}
         />
       </div>
-    </div>
+      <footer className="fixed bottom-0 left-0 right-0 p-4 text-center bg-background/80 backdrop-blur-sm">
+        <a
+          href="https://github.com/unix14"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+        >
+          Eyal Yaakobi
+        </a>
+      </footer>
+    </motion.div>
   );
 };
 
