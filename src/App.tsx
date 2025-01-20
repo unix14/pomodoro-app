@@ -20,7 +20,15 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route
+              path="/"
+              element={
+                <Index
+                  workDuration={workDuration}
+                  breakDuration={breakDuration}
+                />
+              }
+            />
             <Route
               path="/settings"
               element={

@@ -1,13 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Timer from "@/components/Timer";
 import { useToast } from "@/components/ui/use-toast";
-import { Timer as TimerIcon } from "lucide-react";
+import { Timer as TimerIcon, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
-const Index = () => {
-  const [timeLeft, setTimeLeft] = useState(25 * 60);
+interface IndexProps {
+  workDuration: number;
+  breakDuration: number;
+}
+
+const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
+  const [timeLeft, setTimeLeft] = useState(workDuration * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkMode, setIsWorkMode] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Reset timer when work/break durations change
+    setTimeLeft(isWorkMode ? workDuration * 60 : breakDuration * 60);
+  }, [workDuration, breakDuration, isWorkMode]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -20,7 +33,7 @@ const Index = () => {
       const audio = new Audio("/bell.mp3");
       audio.play();
       setIsWorkMode(!isWorkMode);
-      setTimeLeft(isWorkMode ? 5 * 60 : 25 * 60);
+      setTimeLeft(isWorkMode ? breakDuration * 60 : workDuration * 60);
       toast({
         title: isWorkMode ? "Break Time!" : "Back to Work!",
         description: isWorkMode
@@ -30,13 +43,13 @@ const Index = () => {
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, isWorkMode, toast]);
+  }, [isRunning, timeLeft, isWorkMode, workDuration, breakDuration, toast]);
 
   const handleStart = () => setIsRunning(true);
   const handlePause = () => setIsRunning(false);
   const handleReset = () => {
     setIsRunning(false);
-    setTimeLeft(25 * 60);
+    setTimeLeft(workDuration * 60);
     setIsWorkMode(true);
   };
 
@@ -56,6 +69,14 @@ const Index = () => {
             <TimerIcon className="h-6 w-6" />
             <h1 className="text-xl font-semibold">Pomodoro Timer</h1>
           </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/settings")}
+            className="flex items-center space-x-2"
+          >
+            <Settings className="h-5 w-5" />
+          </Button>
         </div>
       </div>
       <div className="flex-1 flex items-center justify-center p-8">
