@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Timer from "@/components/Timer";
 import { useToast } from "@/components/ui/use-toast";
+import { Timer as TimerIcon } from "lucide-react";
 
 const Index = () => {
   const [workDuration, setWorkDuration] = useState(25);
@@ -9,6 +10,13 @@ const Index = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkMode, setIsWorkMode] = useState(true);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Reset timer when durations change
+    if (!isRunning) {
+      setTimeLeft(isWorkMode ? workDuration * 60 : breakDuration * 60);
+    }
+  }, [workDuration, breakDuration, isWorkMode, isRunning]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -43,11 +51,31 @@ const Index = () => {
 
   return (
     <div
-      className={`min-h-screen flex flex-col items-center justify-between p-8 transition-colors duration-700 ${
-        isWorkMode ? "bg-pomodoro-work-bg" : "bg-pomodoro-break-bg"
+      className={`min-h-screen flex flex-col transition-colors duration-700 ${
+        isRunning
+          ? isWorkMode
+            ? "bg-pomodoro-work-bg"
+            : "bg-pomodoro-break-bg"
+          : "bg-background"
       }`}
     >
-      <div className="w-full max-w-md flex-1 flex items-center justify-center">
+      <div className="bg-pomodoro-header-bg shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <TimerIcon className="h-6 w-6" />
+            <h1 className="text-xl font-semibold">Pomodoro Timer</h1>
+          </div>
+          <a
+            href="https://github.com/unix14"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            Eyal Yaakobi
+          </a>
+        </div>
+      </div>
+      <div className="flex-1 flex items-center justify-center p-8">
         <Timer
           minutes={Math.floor(timeLeft / 60)}
           seconds={timeLeft % 60}
@@ -58,14 +86,6 @@ const Index = () => {
           onReset={handleReset}
         />
       </div>
-      <a
-        href="https://github.com/eyalyaakobi"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
-      >
-        Eyal Yaakobi
-      </a>
     </div>
   );
 };

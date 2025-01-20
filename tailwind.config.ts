@@ -20,10 +20,11 @@ export default {
     extend: {
       colors: {
         pomodoro: {
-          "work-bg": "#F2FCE2",
-          "break-bg": "#D3E4FD",
+          "work-bg": "#F5F5F5",  // Light gray for focus mode
+          "break-bg": "#E8F5E9",  // Light green for break mode
           "work-accent": "#2D3F1F",
           "break-accent": "#1F2D3F",
+          "header-bg": "#FFFFFF",  // White background for header
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
