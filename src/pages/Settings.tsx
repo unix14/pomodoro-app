@@ -1,6 +1,8 @@
 import React from "react";
 import SettingsForm from "@/components/SettingsForm";
-import { Timer } from "lucide-react";
+import { Timer, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface SettingsProps {
   workDuration: number;
@@ -15,13 +17,23 @@ const Settings: React.FC<SettingsProps> = ({
   onWorkDurationChange,
   onBreakDurationChange,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="bg-pomodoro-header-bg shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-center relative">
-          <div className="flex items-center space-x-2">
+      <div className="bg-pomodoro-header-bg shadow-sm mb-6">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between relative">
+          <Button
+            variant="ghost"
+            className="flex items-center space-x-2 absolute left-4"
+            onClick={() => navigate("/")}
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span>Back</span>
+          </Button>
+          <div className="flex items-center space-x-2 mx-auto">
             <Timer className="h-6 w-6" />
-            <h1 className="text-xl font-semibold">Settings</h1>
+            <h1 className="text-xl font-semibold">Pomodoro App Settings</h1>
           </div>
         </div>
       </div>
