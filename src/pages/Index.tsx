@@ -126,6 +126,7 @@ const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
           seconds={timeLeft % 60}
           isRunning={isRunning}
           isWorkMode={isWorkMode}
+          completedCycles={completedCycles}
           onStart={handleStart}
           onPause={handlePause}
           onReset={handleReset}
