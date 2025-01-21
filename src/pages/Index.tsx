@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Timer from "@/components/Timer";
-import { useToast } from "@/components/ui/use-toast";
-import { Timer as TimerIcon, Settings } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Timer as TimerIcon, Settings, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { requestNotificationPermission, sendNotification } from "@/utils/notifications";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const motivationalMessages = [
   "Great work! Time to recharge.",
@@ -25,8 +27,23 @@ const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
   const [isRunning, setIsRunning] = useState(false);
   const [isWorkMode, setIsWorkMode] = useState(true);
   const [completedCycles, setCompletedCycles] = useState(0);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [showNotificationAlert, setShowNotificationAlert] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkNotificationPermission = async () => {
+      if ("Notification" in window) {
+        const isGranted = await requestNotificationPermission();
+        setNotificationsEnabled(isGranted);
+        if (!isGranted && Notification.permission === "default") {
+          setShowNotificationAlert(true);
+        }
+      }
+    };
+    checkNotificationPermission();
+  }, []);
 
   const playSound = (soundName: string) => {
     const audio = new Audio(`/${soundName}.mp3`);
@@ -54,6 +71,17 @@ const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
       setIsWorkMode(!isWorkMode);
       setTimeLeft(isWorkMode ? breakDuration * 60 : workDuration * 60);
       
+      const message = wasWorkMode 
+        ? "Break Time! " + getRandomMotivationalMessage()
+        : "Back to Work! Let's crush this next cycle!";
+
+      if (notificationsEnabled) {
+        sendNotification(
+          wasWorkMode ? "Break Time!" : "Back to Work!",
+          message
+        );
+      }
+      
       if (!wasWorkMode) {
         setCompletedCycles(prev => prev + 1);
         toast({
@@ -69,7 +97,7 @@ const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
     }
 
     return () => clearInterval(interval);
-  }, [isRunning, timeLeft, isWorkMode, workDuration, breakDuration, toast]);
+  }, [isRunning, timeLeft, isWorkMode, workDuration, breakDuration, toast, notificationsEnabled]);
 
   const handleStart = () => {
     setIsRunning(true);
@@ -86,6 +114,12 @@ const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
     setTimeLeft(workDuration * 60);
     setIsWorkMode(true);
     playSound("stop");
+  };
+
+  const handleEnableNotifications = async () => {
+    const isGranted = await requestNotificationPermission();
+    setNotificationsEnabled(isGranted);
+    setShowNotificationAlert(false);
   };
 
   return (
@@ -114,6 +148,17 @@ const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
           </Button>
         </div>
       </div>
+      {showNotificationAlert && (
+        <Alert className="m-4">
+          <Bell className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
+            Enable notifications to get timer updates
+            <Button variant="outline" size="sm" onClick={handleEnableNotifications}>
+              Enable
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
       <div className="flex-1 flex items-center justify-center p-8">
         <Timer
           minutes={Math.floor(timeLeft / 60)}
