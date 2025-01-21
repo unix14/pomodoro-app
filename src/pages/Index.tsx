@@ -55,7 +55,6 @@ const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
       setTimeLeft(isWorkMode ? breakDuration * 60 : workDuration * 60);
       
       if (!wasWorkMode) {
-        // Increment cycle count when work session completes
         setCompletedCycles(prev => prev + 1);
         toast({
           title: "New Cycle Starting!",
@@ -105,19 +104,14 @@ const Index: React.FC<IndexProps> = ({ workDuration, breakDuration }) => {
             <TimerIcon className="h-6 w-6" />
             <h1 className="text-xl font-semibold">Pomodoro App</h1>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="text-sm font-medium">
-              Cycles: {completedCycles}
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/settings")}
-              className="flex items-center space-x-2"
-            >
-              <Settings className="h-5 w-5" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/settings")}
+            className="flex items-center space-x-2"
+          >
+            <Settings className="h-5 w-5" />
+          </Button>
         </div>
       </div>
       <div className="flex-1 flex items-center justify-center p-8">
