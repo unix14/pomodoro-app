@@ -7,6 +7,7 @@ interface TimerProps {
   seconds: number;
   isRunning: boolean;
   isWorkMode: boolean;
+  completedCycles: number;
   onStart: () => void;
   onPause: () => void;
   onReset: () => void;
@@ -17,6 +18,7 @@ const Timer: React.FC<TimerProps> = ({
   seconds,
   isRunning,
   isWorkMode,
+  completedCycles,
   onStart,
   onPause,
   onReset,
@@ -26,8 +28,15 @@ const Timer: React.FC<TimerProps> = ({
       <div className="text-6xl font-bold animate-timer-pulse">
         {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
       </div>
-      <div className="text-xl font-semibold">
-        {isWorkMode ? "Focus Time" : "Break Time"}
+      <div className="flex flex-col items-center space-y-2">
+        <div className="text-xl font-semibold">
+          {isWorkMode ? "Focus Time" : "Break Time"}
+        </div>
+        {(isRunning || completedCycles > 0) && (
+          <div className="text-sm text-gray-600">
+            Cycles completed: {completedCycles}
+          </div>
+        )}
       </div>
       <div className="flex space-x-4">
         <Button
@@ -36,7 +45,11 @@ const Timer: React.FC<TimerProps> = ({
           onClick={isRunning ? onPause : onStart}
           className="h-12 w-12"
         >
-          {isRunning ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+          {isRunning ? (
+            <Pause className="h-6 w-6" />
+          ) : (
+            <Play className="h-6 w-6" />
+          )}
         </Button>
         <Button
           variant="outline"
