@@ -32,7 +32,7 @@ const Timer: React.FC<TimerProps> = ({
         <div className="text-xl font-semibold">
           {isWorkMode ? "Focus Time" : "Break Time"}
         </div>
-        {(isRunning || completedCycles > 0) && (
+        {completedCycles > 0 && (
           <div className="text-sm text-gray-600">
             Cycles completed: {completedCycles}
           </div>

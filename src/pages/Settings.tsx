@@ -21,7 +21,7 @@ const Settings: React.FC<SettingsProps> = ({
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-center relative">
           <div className="flex items-center space-x-2">
             <Timer className="h-6 w-6" />
-            <h1 className="text-xl font-semibold">Pomodoro App Settings</h1>
+            <h1 className="text-xl font-semibold">Settings</h1>
           </div>
         </div>
       </div>
